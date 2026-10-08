@@ -1,11 +1,10 @@
 package com.example.exploredigimon.ui.screens.detail
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,23 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,9 +38,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,10 +46,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.exploredigimon.data.model.DigimonDetailResponse
 import com.example.exploredigimon.ui.common.UiState
-import com.example.exploredigimon.ui.theme.DataBlue
-import com.example.exploredigimon.ui.theme.FreeGray
-import com.example.exploredigimon.ui.theme.VaccineGreen
-import com.example.exploredigimon.ui.theme.VirusPurple
+import com.example.exploredigimon.ui.theme.BorderLight
+import com.example.exploredigimon.ui.theme.ChipBackground
+import com.example.exploredigimon.ui.theme.ChipText
+import com.example.exploredigimon.ui.theme.PureWhite
+import com.example.exploredigimon.ui.theme.TextMuted
+import com.example.exploredigimon.ui.theme.TextPrimary
+import com.example.exploredigimon.ui.theme.TextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,33 +69,38 @@ fun DetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Detail Digimon",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+            Column {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Detail Digimon",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = TextPrimary
                         )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Kembali",
+                                tint = TextPrimary
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = PureWhite
+                    )
                 )
-            )
-        }
+                HorizontalDivider(color = BorderLight, thickness = 1.dp)
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
         ) {
             when (val state = uiState) {
                 is UiState.Loading -> {
@@ -123,7 +122,6 @@ fun DetailScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailContentView(digimon: DigimonDetailResponse) {
     val scrollState = rememberScrollState()
@@ -142,11 +140,12 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = PureWhite
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+            border = BorderStroke(1.dp, BorderLight),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -159,30 +158,22 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.primaryContainer
-                    ) {
-                        Text(
-                            text = "#${digimon.id}",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                        )
-                    }
+                    Text(
+                        text = "#${digimon.id}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = TextMuted
+                    )
 
                     if (digimon.xAntibody) {
                         Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.secondaryContainer
+                            shape = RoundedCornerShape(6.dp),
+                            color = ChipBackground
                         ) {
                             Text(
                                 text = "X-Antibody",
                                 style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                color = ChipText,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
                     }
@@ -192,9 +183,8 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
 
                 Box(
                     modifier = Modifier
-                        .size(180.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                        .size(160.dp)
+                        .background(ChipBackground, RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
@@ -213,21 +203,22 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
                     text = digimon.name,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = TextPrimary,
                     textAlign = TextAlign.Center
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = PureWhite
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            border = BorderStroke(1.dp, BorderLight),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -235,147 +226,53 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Informasi Utama",
+                    text = "Informasi",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextPrimary
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val levelText = digimon.levels.firstOrNull()?.level?.ifBlank { null } ?: "-"
-                    InfoCard(
+                    MinimalInfoBox(
                         title = "Level",
                         value = levelText,
-                        icon = Icons.Default.Star,
-                        modifier = Modifier.weight(1f),
-                        accentColor = MaterialTheme.colorScheme.primary
+                        modifier = Modifier.weight(1f)
                     )
 
                     val attributeText = digimon.attributes.firstOrNull()?.attribute?.ifBlank { null } ?: "-"
-                    val attributeColor = when (attributeText.lowercase()) {
-                        "vaccine" -> VaccineGreen
-                        "data" -> DataBlue
-                        "virus" -> VirusPurple
-                        else -> FreeGray
-                    }
-                    InfoCard(
+                    MinimalInfoBox(
                         title = "Attribute",
                         value = attributeText,
-                        icon = Icons.Default.Shield,
-                        modifier = Modifier.weight(1f),
-                        accentColor = attributeColor
+                        modifier = Modifier.weight(1f)
                     )
 
                     val typeText = digimon.types.firstOrNull()?.type?.ifBlank { null } ?: "-"
-                    InfoCard(
+                    MinimalInfoBox(
                         title = "Type",
                         value = typeText,
-                        icon = Icons.Default.Widgets,
-                        modifier = Modifier.weight(1f),
-                        accentColor = MaterialTheme.colorScheme.secondary
+                        modifier = Modifier.weight(1f)
                     )
-                }
-            }
-        }
-
-        if (digimon.levels.size > 1 || digimon.attributes.size > 1 || digimon.types.size > 1) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Klasifikasi Tambahan",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-
-                    if (digimon.levels.size > 1) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Daftar Level:",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            digimon.levels.forEach {
-                                ChipTag(it.level)
-                            }
-                        }
-                    }
-
-                    if (digimon.attributes.size > 1) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Daftar Atribut:",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            digimon.attributes.forEach {
-                                ChipTag(it.attribute)
-                            }
-                        }
-                    }
-
-                    if (digimon.types.size > 1) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Daftar Tipe:",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            digimon.types.forEach {
-                                ChipTag(it.type)
-                            }
-                        }
-                    }
                 }
             }
         }
 
         if (!englishDescription.isNullOrBlank()) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = PureWhite
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                border = BorderStroke(1.dp, BorderLight),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -385,14 +282,14 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
                     Text(
                         text = "Deskripsi",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextPrimary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = englishDescription,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = TextSecondary,
                         lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
                     )
                 }
@@ -400,15 +297,16 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
         }
 
         if (digimon.skills.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = PureWhite
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                border = BorderStroke(1.dp, BorderLight),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -416,59 +314,50 @@ fun DetailContentView(digimon: DigimonDetailResponse) {
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Keahlian & Jurus",
+                        text = "Keahlian",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextPrimary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    digimon.skills.take(5).forEach { skillItem ->
-                        SkillRow(skill = skillItem.skill, desc = skillItem.description)
-                        Spacer(modifier = Modifier.height(6.dp))
+                    digimon.skills.take(4).forEach { skillItem ->
+                        MinimalSkillItem(skill = skillItem.skill, desc = skillItem.description)
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
 @Composable
-fun InfoCard(
+fun MinimalInfoBox(
     title: String,
     value: String,
-    icon: ImageVector,
-    modifier: Modifier = Modifier,
-    accentColor: Color
+    modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        shape = RoundedCornerShape(8.dp),
+        color = ChipBackground
     ) {
         Column(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = accentColor,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = TextMuted
             )
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = value,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = TextPrimary,
                 textAlign = TextAlign.Center
             )
         }
@@ -476,41 +365,25 @@ fun InfoCard(
 }
 
 @Composable
-fun ChipTag(text: String) {
-    Surface(
-        shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun SkillRow(skill: String, desc: String?) {
+fun MinimalSkillItem(skill: String, desc: String?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(ChipBackground, RoundedCornerShape(8.dp))
             .padding(10.dp)
     ) {
         Text(
             text = skill,
             style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            fontWeight = FontWeight.Medium,
+            color = TextPrimary
         )
         if (!desc.isNullOrBlank()) {
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = desc,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = TextSecondary
             )
         }
     }
@@ -523,18 +396,18 @@ fun DetailLoadingView() {
         contentAlignment = Alignment.Center
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 3.dp
+                strokeWidth = 2.dp,
+                modifier = Modifier.size(32.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Menganalisis data Digimon...",
+                text = "Memuat detail...",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = TextMuted
             )
         }
     }
@@ -552,50 +425,41 @@ fun DetailErrorView(
         contentAlignment = Alignment.Center
     ) {
         Card(
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = PureWhite
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+            border = BorderStroke(1.dp, BorderLight),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Gagal Mengambil Detail",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = "Gagal memuat detail",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextPrimary
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = TextSecondary
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onRetry,
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                ) {
                     Text(text = "Coba Lagi")
                 }
             }

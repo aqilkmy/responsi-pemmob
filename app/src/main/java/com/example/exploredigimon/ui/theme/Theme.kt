@@ -1,74 +1,40 @@
 package com.example.exploredigimon.ui.theme
 
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = DarkPrimary,
-    onPrimary = DarkOnPrimary,
-    primaryContainer = DarkPrimaryContainer,
-    onPrimaryContainer = DarkOnPrimaryContainer,
-    secondary = DarkSecondary,
-    onSecondary = DarkOnSecondary,
-    secondaryContainer = DarkSecondaryContainer,
-    onSecondaryContainer = DarkOnSecondaryContainer,
-    tertiary = DarkTertiary,
-    onTertiary = DarkOnTertiary,
-    tertiaryContainer = DarkTertiaryContainer,
-    onTertiaryContainer = DarkOnTertiaryContainer,
-    background = DarkBackground,
-    onBackground = DarkOnBackground,
-    surface = DarkSurface,
-    onSurface = DarkOnSurface,
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = DarkOnSurfaceVariant
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = CyberPrimary,
-    onPrimary = CyberOnPrimary,
-    primaryContainer = CyberPrimaryContainer,
-    onPrimaryContainer = CyberOnPrimaryContainer,
-    secondary = CyberSecondary,
-    onSecondary = CyberOnSecondary,
-    secondaryContainer = CyberSecondaryContainer,
-    onSecondaryContainer = CyberOnSecondaryContainer,
-    tertiary = CyberTertiary,
-    onTertiary = CyberOnTertiary,
-    tertiaryContainer = CyberTertiaryContainer,
-    onTertiaryContainer = CyberOnTertiaryContainer,
-    background = CyberBackground,
-    onBackground = CyberOnBackground,
-    surface = CyberSurface,
-    onSurface = CyberOnSurface,
-    surfaceVariant = CyberSurfaceVariant,
-    onSurfaceVariant = CyberOnSurfaceVariant
+private val MinimalistColorScheme = lightColorScheme(
+    primary = AccentPrimary,
+    onPrimary = PureWhite,
+    primaryContainer = AccentContainer,
+    onPrimaryContainer = OnAccentContainer,
+    secondary = TextSecondary,
+    onSecondary = PureWhite,
+    secondaryContainer = ChipBackground,
+    onSecondaryContainer = ChipText,
+    tertiary = AccentPrimary,
+    onTertiary = PureWhite,
+    background = OffWhite,
+    onBackground = TextPrimary,
+    surface = PureWhite,
+    onSurface = TextPrimary,
+    surfaceVariant = ChipBackground,
+    onSurfaceVariant = TextSecondary,
+    outline = BorderLight,
+    outlineVariant = BorderLight,
+    error = StatusError,
+    onError = PureWhite,
+    errorContainer = StatusErrorContainer,
+    onErrorContainer = StatusError
 )
 
 @Composable
 fun ExploreDigimonTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = MinimalistColorScheme,
         typography = Typography,
         content = content
     )
