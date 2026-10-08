@@ -18,19 +18,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +48,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -57,13 +62,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.exploredigimon.data.model.DigimonItem
 import com.example.exploredigimon.ui.common.UiState
-import com.example.exploredigimon.ui.theme.BorderLight
-import com.example.exploredigimon.ui.theme.ChipBackground
-import com.example.exploredigimon.ui.theme.ChipText
-import com.example.exploredigimon.ui.theme.PureWhite
+import com.example.exploredigimon.ui.theme.BorderSubtle
+import com.example.exploredigimon.ui.theme.CardSurface
+import com.example.exploredigimon.ui.theme.DigitalCyan
+import com.example.exploredigimon.ui.theme.DigitalCyanContainer
+import com.example.exploredigimon.ui.theme.DigitalCyanDark
+import com.example.exploredigimon.ui.theme.DigiviceOrange
+import com.example.exploredigimon.ui.theme.DigiviceOrangeContainer
+import com.example.exploredigimon.ui.theme.DigiviceOrangeDark
+import com.example.exploredigimon.ui.theme.TextBody
 import com.example.exploredigimon.ui.theme.TextMuted
-import com.example.exploredigimon.ui.theme.TextPrimary
-import com.example.exploredigimon.ui.theme.TextSecondary
+import com.example.exploredigimon.ui.theme.TextTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,22 +86,45 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Digimon",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextPrimary
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = PureWhite
-                    )
+            TopAppBar(
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = DigiviceOrange,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "D",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                        }
+                        Column {
+                            Text(
+                                text = "Digimon World",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = TextTitle
+                            )
+                            Text(
+                                text = "Eksplorasi Partner Digimon",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = DigiviceOrange
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = CardSurface
                 )
-                HorizontalDivider(color = BorderLight, thickness = 1.dp)
-            }
+            )
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
@@ -155,10 +187,10 @@ fun SearchBar(
         onValueChange = onQueryChange,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 10.dp),
         placeholder = {
             Text(
-                text = "Cari nama Digimon...",
+                text = "Cari nama Digimon (misal: Greymon)...",
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextMuted
             )
@@ -167,8 +199,8 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                tint = TextMuted,
-                modifier = Modifier.size(20.dp)
+                tint = DigiviceOrange,
+                modifier = Modifier.size(22.dp)
             )
         },
         trailingIcon = {
@@ -177,19 +209,19 @@ fun SearchBar(
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = null,
-                        tint = TextSecondary,
-                        modifier = Modifier.size(18.dp)
+                        tint = TextBody,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
         },
         singleLine = true,
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = BorderLight,
-            focusedContainerColor = PureWhite,
-            unfocusedContainerColor = PureWhite
+            focusedBorderColor = DigiviceOrange,
+            unfocusedBorderColor = BorderSubtle,
+            focusedContainerColor = CardSurface,
+            unfocusedContainerColor = CardSurface
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() })
@@ -229,36 +261,51 @@ fun DigimonGridItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = PureWhite
+            containerColor = CardSurface
         ),
-        border = BorderStroke(1.dp, BorderLight),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        border = BorderStroke(1.dp, BorderSubtle),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Text(
-                    text = "#${digimon.id}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TextMuted
-                )
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = DigiviceOrangeContainer
+                ) {
+                    Text(
+                        text = "#${digimon.id}",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = DigiviceOrangeDark,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(6.dp))
 
             Box(
                 modifier = Modifier
-                    .size(96.dp)
-                    .background(ChipBackground, RoundedCornerShape(8.dp)),
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                DigitalCyanContainer,
+                                DigiviceOrangeContainer.copy(alpha = 0.5f)
+                            )
+                        )
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -276,12 +323,27 @@ fun DigimonGridItem(
             Text(
                 text = digimon.name,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = TextPrimary
+                color = TextTitle
             )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = DigitalCyanContainer
+            ) {
+                Text(
+                    text = "Lihat Detail",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Medium,
+                    color = DigitalCyanDark,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)
+                )
+            }
         }
     }
 }
@@ -296,15 +358,15 @@ fun LoadingView() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 2.dp,
-                modifier = Modifier.size(32.dp)
+                color = DigiviceOrange,
+                strokeWidth = 3.dp,
+                modifier = Modifier.size(36.dp)
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(14.dp))
             Text(
-                text = "Memuat data...",
+                text = "Menghubungkan ke Dunia Digital...",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = TextBody
             )
         }
     }
@@ -322,41 +384,54 @@ fun ErrorView(
         contentAlignment = Alignment.Center
     ) {
         Card(
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = PureWhite
+                containerColor = CardSurface
             ),
-            border = BorderStroke(1.dp, BorderLight),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            border = BorderStroke(1.dp, BorderSubtle),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                    tint = DigiviceOrange,
+                    modifier = Modifier.size(44.dp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Gagal memuat data",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary
+                    text = "Gagal Memuat Data",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = TextTitle
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
-                    color = TextSecondary
+                    color = TextMuted
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(18.dp))
                 Button(
                     onClick = onRetry,
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = DigiviceOrange
                     )
                 ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Coba Lagi")
                 }
             }
@@ -378,26 +453,27 @@ fun EmptyView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Digimon tidak ditemukan",
+                text = "Digimon Tidak Ditemukan",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium,
-                color = TextPrimary
+                fontWeight = FontWeight.Bold,
+                color = TextTitle
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Coba cari dengan kata kunci lain",
+                text = "Coba gunakan kata kunci pencarian yang lain",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = TextMuted,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onReset,
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = DigiviceOrange
                 )
             ) {
-                Text(text = "Reset Pencarian")
+                Text(text = "Tampilkan Semua")
             }
         }
     }
